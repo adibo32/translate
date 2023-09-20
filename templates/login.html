@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login{% endblock %}
+{% block content %}
+  <div class="background-image" style="display:inline-block;width:50%;height:100%;float:left;"></div>
+  <div class="login-container" style="display:inline-block;width:50%;float:right;margin-top:50px;">
+    <img src="{% static 'logo.png' %}" alt="Logo" class="logo">
+    <h2>Login</h2>
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      <div class="input-group">
+        <label for="email">Email:</label>
+        <input type="email" name="email" required>
+      </div>
+      <div class="input-group">
+        <label for="password">Password:</label>
+        <input type="password" name="password" required>
+      </div>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+  <style>
+   
+      .background-image {
+        background-image: url("{% static 'background-image.png' %}");
+        background-repeat: no-repeat;
+        background-size: auto100%;
+      }
+  
+    
+    .login-container {
+      padding: 280px;
+      border-radius: 150px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      max-width: 400px;
+      background-size: auto100%;
+      float: left;
+    }
+    
+    .input-group {
+      margin-bottom: 20px;
+    }
+    .logo {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 100px;
+      padding: 80px;
+      border-radius: 50px;
+      height: auto;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    
+    input[type=email], input[type=password] {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc; /* Add a border */
+      border-radius: 5px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      transition: border-color 0.2s ease-in-out;
+    }
+    input[type=email]:focus, input[type=password]:focus {
+      border-color: #4CAF50; /* Change the border color on focus */
+      outline: none;
+    }
+
+    button[type=submit] {
+      background-color: DodgerBlue;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    
+    button[type=submit]:hover {
+      background-color: DodgerBlue;
+    }
+  </style>
+{% endblock %}

@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${CI_PROJECT_NAME}
+  namespace: ${K8S_NAMESPACE}
+  labels:
+    app: ${CI_PROJECT_NAME}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ${CI_PROJECT_NAME}
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: ${CI_PROJECT_NAME}
+    spec:
+      imagePullSecrets:
+        - name: docker-registry-secret
+      containers:
+        - name: ${CI_PROJECT_NAME}
+          image: ${CI_REGISTRY_IMAGE}:$CI_COMMIT_REF_SLUG
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "2000m"
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: ${CI_PROJECT_NAME}-config
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              httpHeaders:
+                - name: Host
+                  value: ${DEPLOYMENT_HOST}
+              path: /translations/
+              port: 8000
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              httpHeaders:
+                - name: Host
+                  value: ${DEPLOYMENT_HOST}
+              path: /translations/
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              httpHeaders:
+                - name: Host
+                  value: ${DEPLOYMENT_HOST}
+              path: /translations/
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5

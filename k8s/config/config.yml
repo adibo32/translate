@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${CI_PROJECT_NAME}-config
+  namespace: ${K8S_NAMESPACE}
+data:
+  DATABASE_URL: "${DATABASE_URL}"
